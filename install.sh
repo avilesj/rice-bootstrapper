@@ -11,16 +11,23 @@ BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 ######## Script
 PACKAGE_LIST="pulseaudio pulsemixer network-manager build-essential vim xorg imagemagick docker docker.io alsa-utils curl firefox libgif-dev libgnutls28-dev libgraphicsmagick++1-dev libgtk-3-dev libjpeg-dev libmagick++-6-headers libmagick++-dev libncurses5-dev libpng-dev libtiff5-dev libxpm-dev ssh xorg-dev zsh tmux xinit htop ttf-dejavu feh fonts-font-awesome software-properties-common ffmpeg libnotify-bin sxiv xcape"
-ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape"
+ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm"
 # DWM
 DWM_PACKAGE_LIST="compton"
 DWM_COMPONENT_LIST=("dmenu" "st" "slstatus" "dwm")
 # I3
 I3_PACKAGE_LIST="i3 build-essential git cmake cmake-data pkg-config python3-sphinx libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev python3-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-xkb-dev libxcb-xrm-dev libxcb-cursor-dev libasound2-dev libpulse-dev i3-wm libjsoncpp-dev libmpdclient-dev libcurl4-openssl-dev libnl-genl-3-dev rxvt clipit"
-ARCH_I3_PACKAGE_LIST="i3-wm "
+ARCH_I3_PACKAGE_LIST="i3-wm kitty dmenu rofi"
 
 install_arch_packages() {
-       pacman -Sy $ARCH_PACKAGE_LIST --noconfirm 
+	pacman -Sy $ARCH_PACKAGE_LIST --noconfirm 
+}
+
+install_yay() {
+	git clone https://aur.archlinux.org/yay.git /tmp/yay
+	cd /tmp/yay
+	makepkg -si
+	cd -
 }
 install_polybar() {
      git clone --recursive https://github.com/polybar/polybar /tmp/polybar
@@ -309,6 +316,7 @@ while [ $# -ne 0 ]; do
           ;;
       --arch)
 	install_arch_packages
+	install_dotfiles
 	exit 0
           ;;
       --backup)
