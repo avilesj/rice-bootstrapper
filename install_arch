@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu sudo fakeroot binutils make base-devel"
+ARCH_PACKAGE_LIST="git pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu sudo fakeroot binutils make base-devel"
 ARCH_I3_PACKAGE_LIST="i3-wm kitty dmenu rofi"
 
 manage_user() {
@@ -35,10 +35,16 @@ create_directories() {
 pkg_install() {
 	pacman -Sy $ARCH_PACKAGE_LIST --noconfirm 
 	pacman -Sy $I3_PACKAGE_LIST --noconfirm
+}
+
+install_yay() {
 	git clone https://aur.archlinux.org/yay.git /tmp/yay
 	cd /tmp/yay
-	makepkg -si
+	sudo -u $USERNAME makepkg -si
 	cd -
+}
+
+install_aur_pkgs() {
 	yay -S polybar --noconfirm
 }
 
@@ -74,6 +80,8 @@ BK_CONFIG_FOLDER_WHITELIST=("compton.conf" "wall.png")
 BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 
+install_yay
+install_aur_pkgs
 create_directories
 install_scripts
 install_dotfiles
