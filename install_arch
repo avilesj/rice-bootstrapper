@@ -1,0 +1,80 @@
+#!/bin/bash
+
+ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu sudo fakeroot binutils make base-devel"
+ARCH_I3_PACKAGE_LIST="i3-wm kitty dmenu rofi"
+
+manage_user() {
+	echo -n "New username: "
+	read USERNAME
+	echo -n "Password: "
+	read PASSWORD1
+	echo -n "Password confirmation: "
+	read PASSWORD2
+
+	while ! [ $PASSWORD1 = $PASSWORD2 ]; do
+		unset PASSWORD2
+		echo -n "Passwords don't match. Enter new password: "
+		read PASSWORD1
+		echo -n "Password confirmation: "
+		read PASSWORD2
+	done;
+
+	groupadd rice &> /dev/null
+	useradd $USERNAME -G rice &> /dev/null
+	echo "$USERNAME:$PASSWORD1" | chpasswd &> /dev/null
+	usermod -aG docker $USER
+	usermod -aG tty $USER
+}
+
+create_directories() {
+	mkdir $HOME/dev &&
+		mkdir -p $RICE_CONFIG_DIR &&
+		mkdir -p $REPO_DIR
+	}
+
+pkg_install() {
+	pacman -Sy $ARCH_PACKAGE_LIST --noconfirm 
+	pacman -Sy $I3_PACKAGE_LIST --noconfirm
+	git clone https://aur.archlinux.org/yay.git /tmp/yay
+	cd /tmp/yay
+	makepkg -si
+	cd -
+	yay -S polybar --noconfirm
+}
+
+install_scripts() {
+	cd $REPO_DIR
+	git clone "$GIT_REPO/scripts"
+	mkdir -p $BK_SCRIPTS
+	cp scripts/* -r . $BK_SCRIPTS
+	cd -
+}
+
+install_dotfiles() {
+	cd $REPO_DIR
+	git clone "$GIT_REPO/dotfiles"
+	cp -r dotfiles/. $HOME
+	cd -
+}
+
+configure_x() {
+	echo "#!/bin/bash" >> $HOME/.xinitrc
+	echo "i3" >> $HOME/.xinitrc
+}
+
+pkg_install || echo "ERROR: Are you root?"; exit 1;
+manage_user
+
+HOME="/home/$USERNAME"
+RICE_CONFIG_DIR="$HOME/.config/rice"
+REPO_DIR="$HOME/.config/rice/repositories"
+RICE_CONFIG_FILE="$RICE_CONFIG_DIR/rice.conf"
+GIT_REPO="https://github.com/pavilesjose"
+BK_CONFIG_FOLDER_WHITELIST=("compton.conf" "wall.png")
+BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
+BK_SCRIPTS=("$HOME/.config/scripts/")
+
+create_directories
+install_scripts
+install_dotfiles
+configure_x
