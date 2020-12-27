@@ -15,8 +15,8 @@ genfstab -L /mnt >> /mnt/etc/fstab
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/EST /etc/localtime
 arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
-arch-chroot echo runner > /etc/hostname
-arch-chroot cat > /etc/hosts <<- EOM
+arch-chroot /mnt echo runner > /etc/hostname
+arch-chroot /mnt cat > /etc/hosts <<- EOM
 127.0.0.1	localhost
 ::1		localhost
 127.0.1.1	runner.localdomain	runner
