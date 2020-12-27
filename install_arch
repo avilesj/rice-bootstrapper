@@ -24,6 +24,7 @@ manage_user() {
 	echo "$USERNAME:$PASSWORD1" | chpasswd &> /dev/null
 	usermod -aG docker $USERNAME
 	usermod -aG tty $USERNAME
+	chown -R $USERNAME /home/$USERNAME/.
 	echo "%rice ALL=(ALL) ALL" > /etc/sudoers.d/rice
 }
 
@@ -70,7 +71,7 @@ configure_x() {
 	echo "i3" >> $HOME/.xinitrc
 }
 
-pkg_install || echo "ERROR: Are you root?"; exit 1;
+pkg_install || echo "ERROR: Are you root?" &&
 manage_user
 
 HOME="/home/$USERNAME"
