@@ -10,7 +10,7 @@ mkfs.ext4 /dev/sda2
 
 partition
 mount /dev/sda2 /mnt
-pacstrap /mnt base linux linux-firmware
+pacstrap /mnt base linux linux-firmware grub
 genfstab -L /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/EST /etc/localtime
