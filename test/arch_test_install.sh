@@ -21,6 +21,11 @@ cat > /mnt/etc/hosts <<- EOM
 ::1		localhost
 127.0.1.1	runner.localdomain	runner
 EOM
-arch-chroot /mnt echo "root:321321" | chpasswd
-arch-chroot /mnt grub-install --target=i386-pc --recheck /dev/sda
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+cat > /tmp/script.sh <<- EOM
+echo "root:321321" | chpasswd
+grub-install --target=i386-pc --recheck /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+EOM
+chmod +x /mnt/tmp/script.sh
+arch-chroot /mnt /tmp/script.sh
