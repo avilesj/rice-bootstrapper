@@ -22,8 +22,9 @@ manage_user() {
 	groupadd rice &> /dev/null
 	useradd $USERNAME -G rice &> /dev/null
 	echo "$USERNAME:$PASSWORD1" | chpasswd &> /dev/null
-	usermod -aG docker $USER
-	usermod -aG tty $USER
+	usermod -aG docker $USERNAME
+	usermod -aG tty $USERNAME
+	echo "%rice ALL=(ALL) ALL" > /etc/sudoers.d/rice
 }
 
 create_directories() {
@@ -40,6 +41,7 @@ pkg_install() {
 install_yay() {
 	git clone https://aur.archlinux.org/yay.git /tmp/yay
 	cd /tmp/yay
+	chown -R $USERNAME .
 	sudo -u $USERNAME makepkg -si
 	cd -
 }
