@@ -11,7 +11,7 @@ BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 ######## Script
 PACKAGE_LIST="pulseaudio pulsemixer network-manager build-essential vim xorg imagemagick docker docker.io alsa-utils curl firefox libgif-dev libgnutls28-dev libgraphicsmagick++1-dev libgtk-3-dev libjpeg-dev libmagick++-6-headers libmagick++-dev libncurses5-dev libpng-dev libtiff5-dev libxpm-dev ssh xorg-dev zsh tmux xinit htop ttf-dejavu feh fonts-font-awesome software-properties-common ffmpeg libnotify-bin sxiv xcape"
-ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm"
+ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu"
 # DWM
 DWM_PACKAGE_LIST="compton"
 DWM_COMPONENT_LIST=("dmenu" "st" "slstatus" "dwm")
