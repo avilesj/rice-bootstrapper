@@ -11,7 +11,7 @@ BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 ######## Script
 PACKAGE_LIST="pulseaudio pulsemixer network-manager build-essential vim xorg imagemagick docker docker.io alsa-utils curl firefox libgif-dev libgnutls28-dev libgraphicsmagick++1-dev libgtk-3-dev libjpeg-dev libmagick++-6-headers libmagick++-dev libncurses5-dev libpng-dev libtiff5-dev libxpm-dev ssh xorg-dev zsh tmux xinit htop ttf-dejavu feh fonts-font-awesome software-properties-common ffmpeg libnotify-bin sxiv xcape"
-ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu"
+ARCH_PACKAGE_LIST="pulseaudio pulsemixer vim xorg-server xorg-apps xorg-xinit imagemagick docker docker-compose alsa-utils curl firefox giflib gnutls graphicsmagick gtk3 libmagick6 ncurses libpng libjpeg6-turbo libtiff libxpm openssh xorg-xrandr zsh tmux htop ttf-dejavu feh ttf-font-awesome ffmpeg libnotify sxiv xcape xterm ttf-dejavu sudo fakeroot binutils make base-devel"
 # DWM
 DWM_PACKAGE_LIST="compton"
 DWM_COMPONENT_LIST=("dmenu" "st" "slstatus" "dwm")
@@ -23,12 +23,18 @@ install_arch_packages() {
 	pacman -Sy $ARCH_PACKAGE_LIST --noconfirm 
 }
 
+install_i3_arch() {
+	pacman -Sy $I3_PACKAGE_LIST --noconfirm
+	yay -S polybar --noconfirm
+}
+
 install_yay() {
 	git clone https://aur.archlinux.org/yay.git /tmp/yay
 	cd /tmp/yay
 	makepkg -si
 	cd -
 }
+
 install_polybar() {
      git clone --recursive https://github.com/polybar/polybar /tmp/polybar
      cd /tmp/polybar
@@ -74,7 +80,7 @@ install_scripts() {
 install_dotfiles() {
     cd $REPO_DIR
     git clone "$GIT_REPO/dotfiles"
-    cp -r dotfiles/* $HOME
+    cp -r dotfiles/. $HOME
     cd -
 }
 
@@ -253,6 +259,25 @@ bootstrap() {
 
 }
 
+bootstrap_arch() {
+
+    create_directories
+    print_install_formatted "Arch packages"&& install_arch_packages &&
+    print_install_formatted "Dotfiles" && install_dotfiles
+    print_install_formatted "Yay" && install_yay
+
+    print_install_formatted $DESKTOP
+    case $DESKTOP in
+        i3)
+            install_i3_arch
+            ;;
+    esac
+
+    echo "DESKTOP=$DESKTOP" >> $RICE_CONFIG_FILE
+
+}
+
+
 cleanup() {
     echo "Cleaning up..."
     rm -rf $HOME/.git
@@ -295,6 +320,7 @@ purge() {
     
 }
 
+
 purge_dwm() {
     for i in "${DWM_COMPONENT_LIST[@]}"
     do
@@ -315,9 +341,7 @@ while [ $# -ne 0 ]; do
           HOTFIX=1
           ;;
       --arch)
-	install_arch_packages
-	install_dotfiles
-	exit 0
+	ARCH=1
           ;;
       --backup)
           backup
@@ -357,6 +381,7 @@ done
 echo "I'm gonna need your password"
 sudo echo >/dev/null || exit 1
 
+[ -v "$ARCH" ] && bootstrap_arch && exit 0
 [ -z "$PURGE" ] && bootstrap && exit 0
 
 purge
