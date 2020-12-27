@@ -12,14 +12,13 @@ partition
 mount /dev/sda2 /mnt
 pacstrap /mnt base linux linux-firmware grub
 genfstab -L /mnt >> /mnt/etc/fstab
-arch-chroot /mnt
-ln -sf /usr/share/zoneinfo/EST /etc/localtime
-hwclock --systohc
-sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
-echo runner > /etc/hostname
-cat > /etc/hosts <<- EOM
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/EST /etc/localtime
+arch-chroot /mnt hwclock --systohc
+arch-chroot /mnt sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+arch-chroot echo runner > /etc/hostname
+arch-chroot cat > /etc/hosts <<- EOM
 127.0.0.1	localhost
 ::1		localhost
 127.0.1.1	runner.localdomain	runner
 EOM
-echo "root:321321" | chpasswd
+arch-chroot /mnt echo "root:321321" | chpasswd
