@@ -71,14 +71,17 @@ configure_x() {
 	echo "i3" >> $HOME/.xinitrc
 }
 
-USERNAME="javiles"
+pkg_install || echo "ERROR: Are you root?" &&
+manage_user
+
 HOME="/home/$USERNAME"
 RICE_CONFIG_DIR="$HOME/.config/rice"
 REPO_DIR="$HOME/.config/rice/repositories"
-RICE_CONFIG_FILE="$RICE_CONFIG_DIR/rice.conf"
-GIT_REPO="https://github.com/pavilesjose"
-BK_CONFIG_FOLDER_WHITELIST=("compton.conf" "wall.png")
-BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 
 install_yay
+install_aur_pkgs
+create_directories
+install_scripts
+install_dotfiles
+configure_x
