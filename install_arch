@@ -48,7 +48,7 @@ install_yay() {
 }
 
 install_aur_pkgs() {
-	yay -S polybar --noconfirm
+	yay -S polybar picom-jonaburg-git --noconfirm
 }
 
 install_scripts() {
@@ -71,9 +71,7 @@ configure_x() {
 	echo "i3" >> $HOME/.xinitrc
 }
 
-pkg_install || echo "ERROR: Are you root?" &&
-manage_user
-
+USERNAME="javiles"
 HOME="/home/$USERNAME"
 RICE_CONFIG_DIR="$HOME/.config/rice"
 REPO_DIR="$HOME/.config/rice/repositories"
@@ -84,8 +82,3 @@ BK_HOME_FOLDER_WHITELIST=(".emacs" ".xinitrc" ".env")
 BK_SCRIPTS=("$HOME/.config/scripts/")
 
 install_yay
-install_aur_pkgs
-create_directories
-install_scripts
-install_dotfiles
-configure_x
